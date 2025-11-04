@@ -11,23 +11,27 @@ export const gradientTransformer: Transformer = {
 
     let paragraphIndex = 0;
 
-    // Add gradient classes (g-line g-l0..g-l3) to successive <p> elements
+    // Add gradient wrapper span with classes (g-clip g-l0..g-l3), and mark <p> with g-line
     const result = ctx.content.replace(
       /<p([^>]*)>([\s\S]*?)<\/p>/gi,
       (_, attrs: string, inner: string) => {
         const classRegex = /class="([^"]*)"/i;
-        const gradientClass = `g-line g-l${paragraphIndex % 4}`;
+        const lineClass = `g-line`;
+        const shadeClass = `g-l${paragraphIndex % 4}`;
         paragraphIndex += 1;
 
         if (classRegex.test(attrs)) {
           // paragraph already has class attribute – append our classes
-          attrs = attrs.replace(classRegex, (_match: string, classes: string) => `class="${classes} ${gradientClass}"`);
+          attrs = attrs.replace(classRegex, (_match: string, classes: string) => `class="${classes} ${lineClass}"`);
         } else {
           // no class attribute – inject one
-          attrs = `${attrs} class="${gradientClass}"`;
+          attrs = `${attrs} class="${lineClass}"`;
         }
 
-        return `<p${attrs}>${inner}</p>`;
+        // avoid double-wrapping if a g-clip already exists
+        const hasClip = /<span\s+class=["'][^"']*\bg-clip\b[^"']*["']/.test(inner);
+        const wrappedInner = hasClip ? inner : `<span class="g-clip ${shadeClass}">${inner}</span>`;
+        return `<p${attrs}>${wrappedInner}</p>`;
       },
     );
 

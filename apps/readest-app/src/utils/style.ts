@@ -493,17 +493,34 @@ const getGradientStyles = (vs: ViewSettings) => {
   if (!vs.gradientEnabled) return '';
   return `
     html{--gA:${vs.gradientColorA};--gB:${vs.gradientColorB};--gC:${vs.gradientColorC};}
-    .g-line,.g-line *{
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      background-size:100% 1.2em; /* repeat gradient per line */
-      background-repeat:repeat-y;  /* start new gradient on each line */
+    .g-clip{
+      display:inline;
+      -webkit-background-clip:text !important;
+      background-clip:text !important;
+      -webkit-text-fill-color:transparent !important;
+      color:transparent !important;
+      background-repeat:repeat !important;
+      background-position:0 0 !important;
+      background-size:100% 1lh !important; /* 1lh = one line height in supporting browsers */
+      background-size:100% 1.5em !important; /* fallback for browsers without lh unit */
     }
-    .g-l0{background:linear-gradient(90deg,var(--gA),var(--gB));}
-    .g-l1{background:linear-gradient(90deg,var(--gB),var(--gA));}
-    .g-l2{background:linear-gradient(90deg,var(--gA),var(--gC));}
-    .g-l3{background:linear-gradient(90deg,var(--gC),var(--gA));}
+    @supports (background-size: 100% 1lh){
+      .g-clip{
+        background-size:100% 1lh !important;
+      }
+    }
+    .g-clip.g-l0{
+      background-image:linear-gradient(90deg,var(--gA),var(--gB)) !important;
+    }
+    .g-clip.g-l1{
+      background-image:linear-gradient(90deg,var(--gB),var(--gA)) !important;
+    }
+    .g-clip.g-l2{
+      background-image:linear-gradient(90deg,var(--gA),var(--gC)) !important;
+    }
+    .g-clip.g-l3{
+      background-image:linear-gradient(90deg,var(--gC),var(--gA)) !important;
+    }
   `;
 };
 

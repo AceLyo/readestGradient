@@ -489,6 +489,24 @@ export const getThemeCode = () => {
   } as ThemeCode;
 };
 
+const getGradientStyles = (vs: ViewSettings) => {
+  if (!vs.gradientEnabled) return '';
+  return `
+    html{--gA:${vs.gradientColorA};--gB:${vs.gradientColorB};--gC:${vs.gradientColorC};}
+    .g-line,.g-line *{
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      background-size:100% 1.2em; /* repeat gradient per line */
+      background-repeat:repeat-y;  /* start new gradient on each line */
+    }
+    .g-l0{background:linear-gradient(90deg,var(--gA),var(--gB));}
+    .g-l1{background:linear-gradient(90deg,var(--gB),var(--gA));}
+    .g-l2{background:linear-gradient(90deg,var(--gA),var(--gC));}
+    .g-l3{background:linear-gradient(90deg,var(--gC),var(--gA));}
+  `;
+};
+
 export const getStyles = (viewSettings: ViewSettings, themeCode?: ThemeCode) => {
   if (!themeCode) {
     themeCode = getThemeCode();
@@ -529,9 +547,10 @@ export const getStyles = (viewSettings: ViewSettings, themeCode?: ThemeCode) => 
     viewSettings.backgroundTextureId,
     viewSettings.isEink,
   );
+  const gradientStyles = getGradientStyles(viewSettings);
   const translationStyles = getTranslationStyles(viewSettings.showTranslateSource!);
   const userStylesheet = viewSettings.userStylesheet!;
-  return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${translationStyles}\n${userStylesheet}`;
+  return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${gradientStyles}\n${translationStyles}\n${userStylesheet}`;
 };
 
 export const applyTranslationStyle = (viewSettings: ViewSettings) => {

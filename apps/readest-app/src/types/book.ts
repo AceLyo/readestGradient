@@ -135,6 +135,11 @@ export interface BookStyle {
   codeLanguage: string;
   userStylesheet: string;
   userUIStylesheet: string;
+  // Enable BeeLine/Wasp style reading gradient
+  gradientEnabled: boolean;
+  gradientColorA: string;
+  gradientColorB: string;
+  gradientColorC: string;
 
   // fixed-layout specific
   zoomMode: 'fit-page' | 'fit-width' | 'original-size' | 'custom';

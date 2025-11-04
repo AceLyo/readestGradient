@@ -170,6 +170,10 @@ export const DEFAULT_BOOK_STYLE: BookStyle = {
   backgroundSize: 'cover',
   codeHighlighting: false,
   codeLanguage: 'auto-detect',
+  gradientEnabled: true,
+  gradientColorA: '#000000',
+  gradientColorB: '#0060ff',
+  gradientColorC: '#e62020',
   userStylesheet: '',
   userUIStylesheet: '',
 

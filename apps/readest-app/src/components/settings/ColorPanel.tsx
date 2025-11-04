@@ -42,15 +42,19 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
   const [invertImgColorInDark, setInvertImgColorInDark] = useState(
     viewSettings.invertImgColorInDark,
   );
-
+  
   const iconSize16 = useResponsiveSize(16);
   const iconSize24 = useResponsiveSize(24);
   const [editTheme, setEditTheme] = useState<CustomTheme | null>(null);
   const [customThemes, setCustomThemes] = useState<Theme[]>([]);
   const [showCustomThemeEditor, setShowCustomThemeEditor] = useState(false);
+  const [gradientEnabled, setGradientEnabled] = useState(viewSettings.gradientEnabled);
   const [overrideColor, setOverrideColor] = useState(viewSettings.overrideColor);
   const [codeHighlighting, setcodeHighlighting] = useState(viewSettings.codeHighlighting);
   const [codeLanguage, setCodeLanguage] = useState(viewSettings.codeLanguage);
+  const [gradientColorA, setGradientColorA] = useState(viewSettings.gradientColorA);
+  const [gradientColorB, setGradientColorB] = useState(viewSettings.gradientColorB);
+  const [gradientColorC, setGradientColorC] = useState(viewSettings.gradientColorC);
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
   const [backgroundOpacity, setBackgroundOpacity] = useState(viewSettings.backgroundOpacity);
@@ -77,6 +81,10 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     resetToDefaults({
       overrideColor: setOverrideColor,
       invertImgColorInDark: setInvertImgColorInDark,
+      gradientEnabled: setGradientEnabled,
+      gradientColorA: setGradientColorA,
+      gradientColorB: setGradientColorB,
+      gradientColorC: setGradientColorC,
       codeHighlighting: setcodeHighlighting,
       codeLanguage: setCodeLanguage,
     });
@@ -104,6 +112,12 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
   }, [invertImgColorInDark]);
 
   useEffect(() => {
+    if (gradientEnabled === viewSettings.gradientEnabled) return;
+    saveViewSettings(envConfig, bookKey, 'gradientEnabled', gradientEnabled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientEnabled]);
+
+  useEffect(() => {
     if (overrideColor === viewSettings.overrideColor) return;
     saveViewSettings(envConfig, bookKey, 'overrideColor', overrideColor);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,6 +140,22 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     docs.forEach(({ doc }) => manageSyntaxHighlighting(doc, viewSettings));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [codeHighlighting, codeLanguage]);
+
+  useEffect(() => {
+    if (gradientColorA !== viewSettings.gradientColorA)
+      saveViewSettings(envConfig, bookKey, 'gradientColorA', gradientColorA);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientColorA]);
+  useEffect(() => {
+    if (gradientColorB !== viewSettings.gradientColorB)
+      saveViewSettings(envConfig, bookKey, 'gradientColorB', gradientColorB);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientColorB]);
+  useEffect(() => {
+    if (gradientColorC !== viewSettings.gradientColorC)
+      saveViewSettings(envConfig, bookKey, 'gradientColorC', gradientColorC);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientColorC]);
 
   useEffect(() => {
     if (selectedTextureId === viewSettings.backgroundTextureId) return;
@@ -272,6 +302,16 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
               checked={invertImgColorInDark}
               disabled={!isDarkMode}
               onChange={() => setInvertImgColorInDark(!invertImgColorInDark)}
+            />
+          </div>
+
+          <div className='flex items-center justify-between'>
+            <h2 className='font-medium'>{_('Gradient Reading')}</h2>
+            <input
+              type='checkbox'
+              className='toggle'
+              checked={gradientEnabled}
+              onChange={() => setGradientEnabled(!gradientEnabled)}
             />
           </div>
 
@@ -505,6 +545,34 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
               </div>
             </div>
           </div>
+
+          {gradientEnabled && (
+            <div className='card border-base-200 bg-base-100 border p-4 shadow'>
+              <h2 className='mb-2 font-medium'>{_('Gradient Colours')}</h2>
+              <div className='grid grid-cols-3 gap-4'>
+                {(
+                  [
+                    ['A', gradientColorA, setGradientColorA],
+                    ['B', gradientColorB, setGradientColorB],
+                    ['C', gradientColorC, setGradientColorC],
+                  ] as [string, string, (v: string) => void][]
+                ).map(([lbl, val, setVal]) => (
+                  <div key={lbl} className='flex flex-col items-center gap-2'>
+                    <div
+                      className='border-base-300 h-8 w-8 rounded-full border-2 shadow-sm'
+                      style={{ backgroundColor: val }}
+                    />
+                    <ColorInput
+                      label={lbl}
+                      value={val}
+                      compact={true}
+                      onChange={(v: string) => setVal(v)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

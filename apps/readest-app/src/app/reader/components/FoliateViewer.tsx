@@ -50,6 +50,7 @@ import { TransformContext } from '@/services/transformers/types';
 import { transformContent } from '@/services/transformService';
 import { lockScreenOrientation } from '@/utils/bridge';
 import { useTextTranslation } from '../hooks/useTextTranslation';
+import { useBookCoverAutoSave } from '../hooks/useAutoSaveBookCover';
 import { manageSyntaxHighlighting } from '@/utils/highlightjs';
 import { getViewInsets } from '@/utils/insets';
 import { removeTabIndex } from '@/utils/a11y';
@@ -101,6 +102,7 @@ const FoliateViewer: React.FC<{
   useUICSS(bookKey);
   useProgressSync(bookKey);
   useProgressAutoSave(bookKey);
+  useBookCoverAutoSave(bookKey);
   const { syncState, conflictDetails, resolveWithLocal, resolveWithRemote } = useKOSync(bookKey);
   useTextTranslation(bookKey, viewRef.current);
 
@@ -132,7 +134,7 @@ const FoliateViewer: React.FC<{
               viewSettings,
               primaryLanguage: bookData.book?.primaryLanguage,
               content: data,
-              transformers: ['punctuation', 'footnote', 'whitespace', 'language', 'gradient'],
+              transformers: ['punctuation', 'footnote', 'whitespace', 'language', 'sanitizer', 'gradient'],
             } as TransformContext;
             return Promise.resolve(transformContent(ctx));
           }
@@ -271,7 +273,6 @@ const FoliateViewer: React.FC<{
       await import('foliate-js/view.js');
       const view = wrappedFoliateView(document.createElement('foliate-view') as FoliateView);
       view.id = `foliate-view-${bookKey}`;
-      document.body.append(view);
       containerRef.current?.appendChild(view);
 
       const viewSettings = getViewSettings(bookKey)!;

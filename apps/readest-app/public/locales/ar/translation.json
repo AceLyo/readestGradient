@@ -651,5 +651,16 @@
   "Purchase Successful!": "تمت عملية الشراء بنجاح!",
   "lifetime": "مدى الحياة",
   "Thank you for your purchase! Your payment has been processed successfully.": "شكرًا لشرائك! تم معالجة الدفع بنجاح.",
-  "Order ID:": "معرف الطلب:"
+  "Order ID:": "معرف الطلب:",
+  "TTS Highlighting": "تمييز تحويل النص إلى كلام",
+  "Style": "النمط",
+  "Underline": "تسطير",
+  "Strikethrough": "يتوسطه خط",
+  "Squiggly": "متعرج",
+  "Outline": "مخطط",
+  "Save Current Color": "حفظ اللون الحالي",
+  "Quick Colors": "ألوان سريعة",
+  "Highlighter": "محدد النص",
+  "Save Book Cover": "حفظ غلاف الكتاب",
+  "Auto-save last book cover": "حفظ غلاف الكتاب الأخير تلقائيًا"
 }

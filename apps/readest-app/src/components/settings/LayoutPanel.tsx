@@ -12,12 +12,11 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useResetViewSettings } from '@/hooks/useResetSettings';
 import { isCJKEnv } from '@/utils/misc';
 import { getStyles } from '@/utils/style';
-import { saveAndReload } from '@/utils/reload';
 import { getMaxInlineSize } from '@/utils/config';
 import { lockScreenOrientation } from '@/utils/bridge';
 import { saveViewSettings } from '@/helpers/settings';
 import { getBookDirFromWritingMode, getBookLangCode } from '@/utils/book';
-import { MIGHT_BE_RTL_LANGS } from '@/services/constants';
+import { MIGHT_BE_RTL_LANGS, RELOAD_BEFORE_SAVED_TIMEOUT_MS } from '@/services/constants';
 import { SettingsPanelPanelProp } from './SettingsDialog';
 import Select from '@/components/Select';
 import NumberInput from './NumberInput';
@@ -26,7 +25,8 @@ const LayoutPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRese
   const _ = useTranslation();
   const { envConfig, appService } = useEnv();
   const { settings } = useSettingsStore();
-  const { getView, getViewSettings, getGridInsets, setViewSettings } = useReaderStore();
+  const { getView, getViewSettings, getGridInsets } = useReaderStore();
+  const { setViewSettings, recreateViewer } = useReaderStore();
   const { getBookData } = useBookDataStore();
   const viewSettings = getViewSettings(bookKey) || settings.globalViewSettings;
 
@@ -283,7 +283,7 @@ const LayoutPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRese
       (['horizontal-rl', 'vertical-rl'].includes(writingMode) ||
         ['horizontal-rl', 'vertical-rl'].includes(prevWritingMode))
     ) {
-      saveAndReload();
+      setTimeout(() => recreateViewer(envConfig, bookKey), RELOAD_BEFORE_SAVED_TIMEOUT_MS);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [writingMode]);
@@ -582,19 +582,19 @@ const LayoutPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRese
               label={viewSettings.vertical ? _('Maximum Column Height') : _('Maximum Column Width')}
               value={maxInlineSize}
               onChange={setMaxInlineSize}
-              disabled={maxColumnCount === 1 || viewSettings.scrolled}
-              min={400}
+              disabled={false}
+              min={200}
               max={9999}
-              step={100}
+              step={50}
             />
             <NumberInput
               label={viewSettings.vertical ? _('Maximum Column Width') : _('Maximum Column Height')}
               value={maxBlockSize}
               onChange={setMaxBlockSize}
-              disabled={maxColumnCount === 1 || viewSettings.scrolled}
+              disabled={false}
               min={400}
               max={9999}
-              step={100}
+              step={50}
             />
           </div>
         </div>

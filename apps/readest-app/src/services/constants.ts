@@ -165,6 +165,7 @@ export const DEFAULT_BOOK_STYLE: BookStyle = {
   overrideFont: false,
   overrideLayout: false,
   overrideColor: false,
+  gradientReadingEnabled: true,
   backgroundTextureId: 'none',
   backgroundOpacity: 0.6,
   backgroundSize: 'cover',

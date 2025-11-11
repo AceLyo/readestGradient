@@ -51,6 +51,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
   const [overrideColor, setOverrideColor] = useState(viewSettings.overrideColor);
   const [codeHighlighting, setcodeHighlighting] = useState(viewSettings.codeHighlighting);
   const [codeLanguage, setCodeLanguage] = useState(viewSettings.codeLanguage);
+  const [gradientReadingEnabled, setGradientReadingEnabled] = useState(
+    viewSettings.gradientReadingEnabled,
+  );
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
   const [backgroundOpacity, setBackgroundOpacity] = useState(viewSettings.backgroundOpacity);
@@ -108,6 +111,12 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     saveViewSettings(envConfig, bookKey, 'overrideColor', overrideColor);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overrideColor]);
+
+  useEffect(() => {
+    if (gradientReadingEnabled === viewSettings.gradientReadingEnabled) return;
+    saveViewSettings(envConfig, bookKey, 'gradientReadingEnabled', gradientReadingEnabled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientReadingEnabled]);
 
   useEffect(() => {
     let update = false; // check if we need to update syntax highlighting
@@ -282,6 +291,16 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
               className='toggle'
               checked={overrideColor}
               onChange={() => setOverrideColor(!overrideColor)}
+            />
+          </div>
+
+          <div className='flex items-center justify-between'>
+            <h2 className='font-medium'>{_('Gradient Reading')}</h2>
+            <input
+              type='checkbox'
+              className='toggle'
+              checked={gradientReadingEnabled}
+              onChange={() => setGradientReadingEnabled(!gradientReadingEnabled)}
             />
           </div>
 

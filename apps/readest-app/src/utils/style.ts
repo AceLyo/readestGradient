@@ -531,7 +531,10 @@ export const getStyles = (viewSettings: ViewSettings, themeCode?: ThemeCode) => 
   );
   const translationStyles = getTranslationStyles(viewSettings.showTranslateSource!);
   const userStylesheet = viewSettings.userStylesheet!;
-  return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${translationStyles}\n${userStylesheet}`;
+  const gradientStyles = viewSettings.gradientReadingEnabled
+    ? getGradientReadingStyles(viewSettings)
+    : '';
+  return `${layoutStyles}\n${fontStyles}\n${colorStyles}\n${translationStyles}\n${gradientStyles}\n${userStylesheet}`;
 };
 
 export const applyTranslationStyle = (viewSettings: ViewSettings) => {
@@ -674,4 +677,45 @@ export const applyFixedlayoutStyles = (
     }
   `;
   document.head.appendChild(style);
+};
+
+const getGradientReadingStyles = (viewSettings: ViewSettings) => {
+  const isVertical = !!viewSettings.vertical;
+
+  const horizontal = `
+    /* Gradient Reading - body text */
+    html body :is(p, li, dd, blockquote) {
+      background-image: url('/images/beelineGradient1.png');
+      background-size: 100% 128px;
+      background-repeat: repeat-y;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent !important;
+    }
+  `;
+
+  const vertical = `
+    /* Gradient Reading - vertical writing mode */
+    html body :is(p, li, dd, blockquote) {
+      background-image: url('/images/beelineGradient1.png');
+      background-size: 128px 100%;
+      background-repeat: repeat-x;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent !important;
+    }
+  `;
+
+  const exclusions = `
+    /* Exclusions: do not apply gradient to non-body text elements */
+    html body :is(h1, h2, h3, h4, h5, h6, pre, code, kbd, table, figcaption) {
+      -webkit-text-fill-color: initial;
+      color: inherit !important;
+      background: none;
+    }
+  `;
+
+  return `${isVertical ? vertical : horizontal}\n${exclusions}`;
 };

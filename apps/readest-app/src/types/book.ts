@@ -128,6 +128,7 @@ export interface BookStyle {
   overrideFont: boolean;
   overrideLayout: boolean;
   overrideColor: boolean;
+  gradientReadingEnabled: boolean;
   backgroundTextureId: string;
   backgroundOpacity: number;
   backgroundSize: string;

@@ -166,6 +166,8 @@ export const DEFAULT_BOOK_STYLE: BookStyle = {
   overrideLayout: false,
   overrideColor: false,
   gradientReadingEnabled: true,
+  gradientSize: 128,
+  gradientImage: 'beelineGradient1',
   backgroundTextureId: 'none',
   backgroundOpacity: 0.6,
   backgroundSize: 'cover',

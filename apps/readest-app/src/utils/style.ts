@@ -681,12 +681,14 @@ export const applyFixedlayoutStyles = (
 
 const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   const isVertical = !!viewSettings.vertical;
+  const gradientSize = viewSettings.gradientSize || 128;
+  const gradientImage = viewSettings.gradientImage || 'beelineGradient1';
 
   const horizontal = `
     /* Gradient Reading - body text */
     html body :is(p, li, dd, blockquote) {
-      background-image: url('/images/beelineGradient1.png');
-      background-size: 100% 128px;
+      background-image: url('/images/${gradientImage}.png');
+      background-size: 100% ${gradientSize}px;
       background-repeat: repeat-y;
       -webkit-background-clip: text;
       background-clip: text;
@@ -698,8 +700,8 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   const vertical = `
     /* Gradient Reading - vertical writing mode */
     html body :is(p, li, dd, blockquote) {
-      background-image: url('/images/beelineGradient1.png');
-      background-size: 128px 100%;
+      background-image: url('/images/${gradientImage}.png');
+      background-size: ${gradientSize}px 100%;
       background-repeat: repeat-x;
       -webkit-background-clip: text;
       background-clip: text;
@@ -714,6 +716,14 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
       -webkit-text-fill-color: initial;
       color: inherit !important;
       background: none;
+    }
+    /* Exclude drop caps (first letter) from gradient effect */
+    html body :is(p, li, dd, blockquote)::first-letter {
+      -webkit-text-fill-color: var(--theme-fg-color) !important;
+      color: var(--theme-fg-color) !important;
+      background: none !important;
+      -webkit-background-clip: initial;
+      background-clip: initial;
     }
   `;
 

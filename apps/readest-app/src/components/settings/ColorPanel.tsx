@@ -54,6 +54,8 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
   const [gradientReadingEnabled, setGradientReadingEnabled] = useState(
     viewSettings.gradientReadingEnabled,
   );
+  const [gradientSize, setGradientSize] = useState(viewSettings.gradientSize);
+  const [gradientImage, setGradientImage] = useState(viewSettings.gradientImage);
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
   const [backgroundOpacity, setBackgroundOpacity] = useState(viewSettings.backgroundOpacity);
@@ -85,6 +87,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     });
     setThemeColor('default');
     setThemeMode('auto');
+    setGradientReadingEnabled(true);
+    setGradientSize(128);
+    setGradientImage('beelineGradient1');
     setSelectedTextureId('none');
     setBackgroundOpacity(0.6);
     setBackgroundSize('cover');
@@ -117,6 +122,18 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     saveViewSettings(envConfig, bookKey, 'gradientReadingEnabled', gradientReadingEnabled);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradientReadingEnabled]);
+
+  useEffect(() => {
+    if (gradientSize === viewSettings.gradientSize) return;
+    saveViewSettings(envConfig, bookKey, 'gradientSize', gradientSize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientSize]);
+
+  useEffect(() => {
+    if (gradientImage === viewSettings.gradientImage) return;
+    saveViewSettings(envConfig, bookKey, 'gradientImage', gradientImage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientImage]);
 
   useEffect(() => {
     let update = false; // check if we need to update syntax highlighting
@@ -303,6 +320,41 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
               onChange={() => setGradientReadingEnabled(!gradientReadingEnabled)}
             />
           </div>
+
+          {/* Gradient Reading Settings */}
+          {gradientReadingEnabled && (
+            <div className='card border-base-200 bg-base-100 space-y-4 border p-4 shadow'>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>{_('Gradient Image')}</span>
+                <Select
+                  value={gradientImage}
+                  onChange={(e) => setGradientImage(e.target.value)}
+                  options={[
+                    { value: 'beelineGradient1', label: 'Gradient 1' },
+                    { value: 'beelineGradient2', label: 'Gradient 2' },
+                    { value: 'beelineGradient3', label: 'Gradient 3' },
+                    { value: 'beelineGradient4', label: 'Gradient 4' },
+                  ]}
+                />
+              </div>
+
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>{_('Gradient Size')}</span>
+                <div className='flex items-center gap-2'>
+                  <input
+                    type='range'
+                    min='64'
+                    max='256'
+                    step='8'
+                    value={gradientSize}
+                    onChange={(e) => setGradientSize(parseInt(e.target.value))}
+                    className='range range-sm w-32'
+                  />
+                  <span className='w-12 text-right text-sm'>{gradientSize}px</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div>
             <h2 className='mb-2 font-medium'>{_('Theme Color')}</h2>

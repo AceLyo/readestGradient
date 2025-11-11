@@ -16,6 +16,7 @@ import SidebarToggler from './SidebarToggler';
 import BookmarkToggler from './BookmarkToggler';
 import NotebookToggler from './NotebookToggler';
 import SettingsToggler from './SettingsToggler';
+import GradientToggler from './GradientToggler';
 import TranslationToggler from './TranslationToggler';
 import ViewMenu from './ViewMenu';
 
@@ -174,6 +175,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
         </div>
 
         <div className='bg-base-100 z-20 ml-auto flex h-full items-center space-x-4 ps-2'>
+          <GradientToggler bookKey={bookKey} />
           <SettingsToggler />
           <NotebookToggler bookKey={bookKey} />
           <Dropdown

@@ -263,6 +263,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
         />
       ) : (
         <>
+          {/* Theme Mode */}
           <div className='flex items-center justify-between'>
             <h2 className='font-medium'>{_('Theme Mode')}</h2>
             <div className='flex gap-4'>
@@ -290,6 +291,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             </div>
           </div>
 
+          {/* Invert Image In Dark Mode */}
           <div className='flex items-center justify-between'>
             <h2 className='font-medium'>{_('Invert Image In Dark Mode')}</h2>
             <input
@@ -301,6 +303,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             />
           </div>
 
+          {/* Override Book Color */}
           <div className='flex items-center justify-between'>
             <h2 className='font-medium'>{_('Override Book Color')}</h2>
             <input
@@ -311,6 +314,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             />
           </div>
 
+          {/* Gradient Reading Toggle */}
           <div className='flex items-center justify-between'>
             <h2 className='font-medium'>{_('Gradient Reading')}</h2>
             <input
@@ -338,6 +342,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                 />
               </div>
 
+              {/* Gradient Size Slider */}
               <div className='flex items-center justify-between'>
                 <span className='text-sm font-medium'>{_('Gradient Size')}</span>
                 <div className='flex items-center gap-2'>
@@ -345,17 +350,48 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                     type='range'
                     min='64'
                     max='256'
-                    step='8'
+                    step='0.1'
                     value={gradientSize}
-                    onChange={(e) => setGradientSize(parseInt(e.target.value))}
-                    className='range range-sm w-32'
+                    onChange={(e) => setGradientSize(parseFloat(e.target.value))}
+                    className='range range-sm w-48'
                   />
-                  <span className='w-12 text-right text-sm'>{gradientSize}px</span>
+                  <div className='relative w-24'>
+                    <input
+                      type='number'
+                      min='64'
+                      max='256'
+                      step='0.1'
+                      value={gradientSize}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        if (!isNaN(value) && value >= 64 && value <= 256) {
+                          setGradientSize(value);
+                        } else if (e.target.value === '') {
+                          // Allow empty input for user convenience while typing
+                          return;
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Clamp value on blur if out of range
+                        const value = parseFloat(e.target.value);
+                        if (isNaN(value) || value < 64) {
+                          setGradientSize(64);
+                        } else if (value > 256) {
+                          setGradientSize(256);
+                        }
+                      }}
+                      className='input input-bordered input-sm w-full pr-6 text-right text-sm'
+                    />
+                    <span className='pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs opacity-60'>
+                      px
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Theme Color */}
           <div>
             <h2 className='mb-2 font-medium'>{_('Theme Color')}</h2>
             <div className='grid grid-cols-3 gap-4'>
@@ -412,6 +448,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             </div>
           </div>
 
+          {/* Background Image */}
           <div>
             <h2 className='mb-2 font-medium'>{_('Background Image')}</h2>
             <div className='mb-4 grid grid-cols-2 gap-4'>
@@ -512,6 +549,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             )}
           </div>
 
+          {/* Highlight Colors */}
           <div>
             <h2 className='mb-2 font-medium'>{_('Highlight Colors')}</h2>
             <div className='card border-base-200 bg-base-100 overflow-visible border p-4 shadow'>
@@ -547,6 +585,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
             </div>
           </div>
 
+          {/* Code Highlighting */}
           <div className='w-full'>
             <h2 className='mb-2 font-medium'>{_('Code Highlighting')}</h2>
             <div className='card border-base-200 bg-base-100 border shadow'>

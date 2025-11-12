@@ -47,4 +47,5 @@ fastlane/report.xml
 
 cmds.txt
 
-/apps/readest-app/src-tauri/
+apps/readest-app/src-tauri/
+packages/

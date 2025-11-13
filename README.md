@@ -7,6 +7,8 @@
 
 [Readest][link-website] is an open-source ebook reader designed for immersive and deep reading experiences. Built as a modern rewrite of [Foliate](https://github.com/johnfactotum/foliate), it leverages [Next.js 15](https://github.com/vercel/next.js) and [Tauri v2](https://github.com/tauri-apps/tauri) to deliver a smooth, cross-platform experience across macOS, Windows, Linux, Android, iOS, and the Web.
 
+ReadestGradient is a fork created to experiment with a gradient reading mode feature, similar to Beeline and Waspline Reader. 
+
 [![Website][badge-website]][link-website]
 [![Web App][badge-web-app]][link-web-readest]
 [![OS][badge-platforms]][link-website]

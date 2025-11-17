@@ -690,6 +690,9 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
       background-image: url('/images/${gradientImage}.png');
       background-size: 100% ${gradientSize}px;
       background-repeat: repeat-y;
+      background-position: 0 0;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -703,6 +706,9 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
       background-image: url('/images/${gradientImage}.png');
       background-size: ${gradientSize}px 100%;
       background-repeat: repeat-x;
+      background-position: 0 0;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;

@@ -49,3 +49,7 @@ cmds.txt
 
 apps/readest-app/src-tauri/
 packages/
+apps/readest-app/src-tauri/plugins
+TODO
+apps/readest-app/src-tauri/gen/android/app/src/main/AndroidManifest.xml
+apps/readest-app/src-tauri/Cargo.toml

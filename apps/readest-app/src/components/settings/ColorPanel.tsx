@@ -55,6 +55,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     viewSettings.gradientReadingEnabled,
   );
   const [gradientSize, setGradientSize] = useState(viewSettings.gradientSize);
+  const [gradientSizeInput, setGradientSizeInput] = useState(
+    String(viewSettings.gradientSize),
+  );
   const [gradientImage, setGradientImage] = useState(viewSettings.gradientImage);
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
@@ -89,6 +92,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     setThemeMode('auto');
     setGradientReadingEnabled(true);
     setGradientSize(128);
+    setGradientSizeInput('128');
     setGradientImage('beelineGradient1');
     setSelectedTextureId('none');
     setBackgroundOpacity(0.6);
@@ -127,6 +131,11 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     if (gradientSize === viewSettings.gradientSize) return;
     saveViewSettings(envConfig, bookKey, 'gradientSize', gradientSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientSize]);
+
+  // Sync input value when gradientSize changes (e.g., from slider)
+  useEffect(() => {
+    setGradientSizeInput(String(gradientSize));
   }, [gradientSize]);
 
   useEffect(() => {
@@ -343,9 +352,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
               </div>
 
               {/* Gradient Size Slider */}
-              <div className='flex items-center justify-between'>
-                <span className='text-sm font-medium'>{_('Gradient Size')}</span>
-                <div className='flex items-center gap-2'>
+              <div className='flex flex-col gap-2'>
+                <div className='flex items-center gap-4'>
+                  <span className='text-sm font-medium'>{_('Gradient Size')}</span>
                   <input
                     type='range'
                     min='64'
@@ -353,22 +362,25 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                     step='0.1'
                     value={gradientSize}
                     onChange={(e) => setGradientSize(parseFloat(e.target.value))}
-                    className='range range-sm w-48'
+                    className='range range-sm flex-1'
                   />
-                  <div className='relative w-24'>
+                </div>
+                <div className='flex justify-end'>
+                  <div className='relative w-20'>
                     <input
-                      type='number'
-                      min='64'
-                      max='256'
-                      step='0.1'
-                      value={gradientSize}
+                      type='text'
+                      inputMode='decimal'
+                      value={gradientSizeInput}
                       onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        if (!isNaN(value) && value >= 64 && value <= 256) {
-                          setGradientSize(value);
-                        } else if (e.target.value === '') {
-                          // Allow empty input for user convenience while typing
-                          return;
+                        const value = e.target.value;
+                        // Allow empty string or valid numbers (including decimals)
+                        if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                          setGradientSizeInput(value);
+                          const numValue = parseFloat(value);
+                          // Update gradientSize if valid and in range, but allow intermediate values in input
+                          if (!isNaN(numValue) && numValue >= 64 && numValue <= 256) {
+                            setGradientSize(numValue);
+                          }
                         }
                       }}
                       onBlur={(e) => {
@@ -376,8 +388,13 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                         const value = parseFloat(e.target.value);
                         if (isNaN(value) || value < 64) {
                           setGradientSize(64);
+                          setGradientSizeInput('64');
                         } else if (value > 256) {
                           setGradientSize(256);
+                          setGradientSizeInput('256');
+                        } else {
+                          // Ensure input matches the actual value
+                          setGradientSizeInput(String(value));
                         }
                       }}
                       className='input input-bordered input-sm w-full pr-6 text-right text-sm'

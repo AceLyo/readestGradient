@@ -58,6 +58,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
   const [gradientSizeInput, setGradientSizeInput] = useState(
     String(viewSettings.gradientSize),
   );
+  const [autoGradientSizing, setAutoGradientSizing] = useState(
+    viewSettings.autoGradientSizing ?? true,
+  );
   const [gradientImage, setGradientImage] = useState(viewSettings.gradientImage);
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
@@ -93,6 +96,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     setGradientReadingEnabled(true);
     setGradientSize(128);
     setGradientSizeInput('128');
+    setAutoGradientSizing(true);
     setGradientImage('beelineGradient1');
     setSelectedTextureId('none');
     setBackgroundOpacity(0.6);
@@ -132,6 +136,12 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     saveViewSettings(envConfig, bookKey, 'gradientSize', gradientSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradientSize]);
+
+  useEffect(() => {
+    if (autoGradientSizing === (viewSettings.autoGradientSizing ?? true)) return;
+    saveViewSettings(envConfig, bookKey, 'autoGradientSizing', autoGradientSizing);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoGradientSizing]);
 
   // Sync input value when gradientSize changes (e.g., from slider)
   useEffect(() => {
@@ -347,11 +357,39 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                     { value: 'beelineGradient2', label: 'Gradient 2' },
                     { value: 'beelineGradient3', label: 'Gradient 3' },
                     { value: 'beelineGradient4', label: 'Gradient 4' },
+                    { value: 'beelineGradient5', label: 'Gradient 5' },
+                    { value: 'beelineGradient6', label: 'Gradient 6' },
+                    { value: 'beelineGradient7', label: 'Gradient 7' },
+                    { value: 'beelineGradient8', label: 'Gradient 8' },
+                    { value: 'beelineGradient9', label: 'Gradient 9' },
+                    { value: 'beelineGradient10', label: 'Gradient 10' },
+                    { value: 'beelineGradient11', label: 'Gradient 11' },
+                    { value: 'beelineGradient12', label: 'Gradient 12' },
+                    { value: 'beelineGradient13', label: 'Gradient 13' },
+                    { value: 'beelineGradient14', label: 'Gradient 14' },
+                    { value: 'beelineGradient15', label: 'Gradient 15' },
+                    { value: 'beelineGradient16', label: 'Gradient 16' },
+                    { value: 'beelineGradient17', label: 'Gradient 17' },
+                    { value: 'beelineGradient18', label: 'Gradient 18' },
+                    { value: 'beelineGradient19', label: 'Gradient 19' },
+                    { value: 'beelineGradient20', label: 'Gradient 20' },
                   ]}
                 />
               </div>
 
+              {/* Auto Gradient Sizing */}
+              <div className='flex items-center justify-between'>
+                <span className='text-sm font-medium'>{_('Auto Gradient Sizing')}</span>
+                <input
+                  type='checkbox'
+                  className='toggle'
+                  checked={autoGradientSizing}
+                  onChange={() => setAutoGradientSizing(!autoGradientSizing)}
+                />
+              </div>
+
               {/* Gradient Size Slider */}
+              {!autoGradientSizing && (
               <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-4'>
                   <span className='text-sm font-medium'>{_('Gradient Size')}</span>
@@ -405,6 +443,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                   </div>
                 </div>
               </div>
+              )}
             </div>
           )}
 

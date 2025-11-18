@@ -681,7 +681,19 @@ export const applyFixedlayoutStyles = (
 
 const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   const isVertical = !!viewSettings.vertical;
-  const gradientSize = viewSettings.gradientSize || 128;
+  let gradientSize = viewSettings.gradientSize || 128;
+  
+  // Calculate gradient size automatically based on font size and line height
+  if (viewSettings.autoGradientSizing !== false) {
+    const isMobile = ['ios', 'android'].includes(getOSPlatform());
+    const fontScale = isMobile ? 1.25 : 1;
+    const zoomScale = (viewSettings.zoomLevel || 100) / 100.0;
+    const fontSize = (viewSettings.defaultFontSize || 16) * fontScale * zoomScale;
+    const lineHeight = viewSettings.lineHeight || 1.4;
+    // Calculate size for 4 lines: fontSize * lineHeight * 4
+    gradientSize = fontSize * lineHeight * 4;
+  }
+  
   const gradientImage = viewSettings.gradientImage || 'beelineGradient1';
 
   const horizontal = `

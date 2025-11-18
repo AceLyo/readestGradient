@@ -130,6 +130,7 @@ export interface BookStyle {
   overrideColor: boolean;
   gradientReadingEnabled: boolean;
   gradientSize: number;
+  autoGradientSizing: boolean;
   gradientImage: string;
   backgroundTextureId: string;
   backgroundOpacity: number;

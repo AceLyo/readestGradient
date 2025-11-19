@@ -170,6 +170,7 @@ export const DEFAULT_BOOK_STYLE: BookStyle = {
   gradientSize: 128,
   autoGradientSizing: true,
   gradientImage: 'beelineGradient1',
+  gradientFullMode: true,
   backgroundTextureId: 'none',
   backgroundOpacity: 0.6,
   backgroundSize: 'cover',

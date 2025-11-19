@@ -55,6 +55,7 @@ import { getViewInsets } from '@/utils/insets';
 import { removeTabIndex } from '@/utils/a11y';
 import Spinner from '@/components/Spinner';
 import KOSyncConflictResolver from './KOSyncResolver';
+import { enableGradientDebugging } from '@/utils/debugGradient';
 
 declare global {
   interface Window {
@@ -259,6 +260,13 @@ const FoliateViewer: React.FC<{
     onRelocate: progressRelocateHandler,
     onRendererRelocate: docRelocateHandler,
   });
+
+  useEffect(() => {
+    // Enable gradient debugging in development
+    if (process.env.NODE_ENV === 'development') {
+      enableGradientDebugging();
+    }
+  }, []);
 
   useEffect(() => {
     if (isViewCreated.current) return;

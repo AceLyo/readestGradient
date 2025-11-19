@@ -62,6 +62,9 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     viewSettings.autoGradientSizing ?? true,
   );
   const [gradientImage, setGradientImage] = useState(viewSettings.gradientImage);
+  const [gradientFullMode, setGradientFullMode] = useState(
+    viewSettings.gradientFullMode ?? false,
+  );
 
   const [selectedTextureId, setSelectedTextureId] = useState(viewSettings.backgroundTextureId);
   const [backgroundOpacity, setBackgroundOpacity] = useState(viewSettings.backgroundOpacity);
@@ -98,6 +101,7 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     setGradientSizeInput('128');
     setAutoGradientSizing(true);
     setGradientImage('beelineGradient1');
+    setGradientFullMode(false);
     setSelectedTextureId('none');
     setBackgroundOpacity(0.6);
     setBackgroundSize('cover');
@@ -153,6 +157,12 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
     saveViewSettings(envConfig, bookKey, 'gradientImage', gradientImage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradientImage]);
+
+  useEffect(() => {
+    if (gradientFullMode === (viewSettings.gradientFullMode ?? false)) return;
+    saveViewSettings(envConfig, bookKey, 'gradientFullMode', gradientFullMode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gradientFullMode]);
 
   useEffect(() => {
     let update = false; // check if we need to update syntax highlighting
@@ -385,6 +395,22 @@ const ColorPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset
                   className='toggle'
                   checked={autoGradientSizing}
                   onChange={() => setAutoGradientSizing(!autoGradientSizing)}
+                />
+              </div>
+
+              {/* Full Gradient Mode */}
+              <div className='flex items-center justify-between'>
+                <div className='flex flex-col'>
+                  <span className='text-sm font-medium'>{_('Full Gradient Mode')}</span>
+                  <span className='text-xs text-base-content/70'>
+                    {_('Apply gradient to all text (including headings)')}
+                  </span>
+                </div>
+                <input
+                  type='checkbox'
+                  className='toggle'
+                  checked={gradientFullMode}
+                  onChange={() => setGradientFullMode(!gradientFullMode)}
                 />
               </div>
 

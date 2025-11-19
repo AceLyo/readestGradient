@@ -132,6 +132,7 @@ export interface BookStyle {
   gradientSize: number;
   autoGradientSizing: boolean;
   gradientImage: string;
+  gradientFullMode: boolean;
   backgroundTextureId: string;
   backgroundOpacity: number;
   backgroundSize: string;

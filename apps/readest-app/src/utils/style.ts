@@ -681,6 +681,7 @@ export const applyFixedlayoutStyles = (
 
 const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   const isVertical = !!viewSettings.vertical;
+  const gradientFullMode = viewSettings.gradientFullMode ?? false;
   let gradientSize = viewSettings.gradientSize || 128;
   
   // Calculate gradient size automatically based on font size and line height
@@ -696,34 +697,101 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   
   const gradientImage = viewSettings.gradientImage || 'beelineGradient1';
 
+  // Full mode: apply gradient to all text elements (excluding non-text elements)
+  // Exclude: img, svg, canvas, hr, br, input, button, select, textarea, iframe, embed, object, video, audio
+  const horizontalFull = `
+    /* Gradient Reading - full mode (all text) */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse) {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: 100% ${gradientSize}px !important;
+      background-repeat: repeat-y !important;
+      background-position: 0 0 !important;
+      background-attachment: local !important;
+      -webkit-box-decoration-break: clone !important;
+      box-decoration-break: clone !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      color: transparent !important;
+    }
+    /* Override inline styles with higher specificity */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse)[style*="color"] {
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    /* Ensure background image is applied even with inline styles */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse)[style*="background"] {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: 100% ${gradientSize}px !important;
+      background-repeat: repeat-y !important;
+      background-position: 0 0 !important;
+      background-attachment: local !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+    }
+  `;
+
+  const verticalFull = `
+    /* Gradient Reading - full mode (all text, vertical) */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse) {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: ${gradientSize}px 100% !important;
+      background-repeat: repeat-x !important;
+      background-position: 0 0 !important;
+      background-attachment: local !important;
+      -webkit-box-decoration-break: clone !important;
+      box-decoration-break: clone !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      color: transparent !important;
+    }
+    /* Override inline styles with higher specificity */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse)[style*="color"] {
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    /* Ensure background image is applied even with inline styles */
+    html body *:not(img):not(svg):not(canvas):not(hr):not(br):not(input):not(button):not(select):not(textarea):not(iframe):not(embed):not(object):not(video):not(audio):not(area):not(map):not(meta):not(link):not(script):not(style):not(noscript):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon):not(ellipse)[style*="background"] {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: ${gradientSize}px 100% !important;
+      background-repeat: repeat-x !important;
+      background-position: 0 0 !important;
+      background-attachment: local !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+    }
+  `;
+
+  // Selective mode: apply gradient only to body text elements
   const horizontal = `
     /* Gradient Reading - body text */
-    html body :is(p, li, dd, blockquote) {
-      background-image: url('/images/${gradientImage}.png');
-      background-size: 100% ${gradientSize}px;
-      background-repeat: repeat-y;
-      background-position: 0 0;
-      -webkit-box-decoration-break: clone;
-      box-decoration-break: clone;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    html body :is(p, li, dd, blockquote, div:not(:has(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, pre, blockquote)), section:not(:has(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, pre, blockquote))) {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: 100% ${gradientSize}px !important;
+      background-repeat: repeat-y !important;
+      background-position: 0 0 !important;
+      -webkit-box-decoration-break: clone !important;
+      box-decoration-break: clone !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
       color: transparent !important;
     }
   `;
 
   const vertical = `
     /* Gradient Reading - vertical writing mode */
-    html body :is(p, li, dd, blockquote) {
-      background-image: url('/images/${gradientImage}.png');
-      background-size: ${gradientSize}px 100%;
-      background-repeat: repeat-x;
-      background-position: 0 0;
-      -webkit-box-decoration-break: clone;
-      box-decoration-break: clone;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    html body :is(p, li, dd, blockquote, div:not(:has(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, pre, blockquote)), section:not(:has(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, pre, blockquote))) {
+      background-image: url('/images/${gradientImage}.png') !important;
+      background-size: ${gradientSize}px 100% !important;
+      background-repeat: repeat-x !important;
+      background-position: 0 0 !important;
+      -webkit-box-decoration-break: clone !important;
+      box-decoration-break: clone !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
       color: transparent !important;
     }
   `;
@@ -731,19 +799,25 @@ const getGradientReadingStyles = (viewSettings: ViewSettings) => {
   const exclusions = `
     /* Exclusions: do not apply gradient to non-body text elements */
     html body :is(h1, h2, h3, h4, h5, h6, pre, code, kbd, table, figcaption) {
-      -webkit-text-fill-color: initial;
+      -webkit-text-fill-color: initial !important;
       color: inherit !important;
-      background: none;
+      background: none !important;
     }
     /* Exclude drop caps (first letter) from gradient effect */
-    html body :is(p, li, dd, blockquote)::first-letter {
+    html body :is(p, li, dd, blockquote, div, section)::first-letter {
       -webkit-text-fill-color: var(--theme-fg-color) !important;
       color: var(--theme-fg-color) !important;
       background: none !important;
-      -webkit-background-clip: initial;
-      background-clip: initial;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
     }
   `;
 
-  return `${isVertical ? vertical : horizontal}\n${exclusions}`;
+  if (gradientFullMode) {
+    // Full mode: no exclusions
+    return `${isVertical ? verticalFull : horizontalFull}`;
+  } else {
+    // Selective mode: with exclusions
+    return `${isVertical ? vertical : horizontal}\n${exclusions}`;
+  }
 };

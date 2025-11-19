@@ -181,7 +181,13 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
           <Dropdown
             label={_('View Options')}
             className='exclude-title-bar-mousedown dropdown-bottom dropdown-end'
-            buttonClassName='btn btn-ghost h-8 min-h-8 w-8 p-0'
+            buttonClassName={clsx(
+              'btn btn-ghost p-0',
+              // Increase touch target size on mobile for better accessibility (44px minimum)
+              appService?.isMobileApp
+                ? 'h-11 min-h-11 w-11 min-w-11'
+                : 'h-8 min-h-8 w-8 min-w-8',
+            )}
             toggleButton={<PiDotsThreeVerticalBold size={iconSize16} />}
             onToggle={handleToggleDropdown}
           >

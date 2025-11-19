@@ -50,6 +50,7 @@ export interface SystemSettings {
   screenWakeLock: boolean;
   screenBrightness: number;
   autoScreenBrightness: boolean;
+  disableBrightnessControl: boolean;
   alwaysShowStatusBar: boolean;
   alwaysInForeground: boolean;
   openLastBooks: boolean;

@@ -9,5 +9,6 @@
   "Search in {{count}} Book(s)..._one": "Search in {{count}} book...",
   "Search in {{count}} Book(s)..._other": "Search in {{count}} books...",
   "{{count}} pages left in chapter_one": "{{count}} page left in chapter",
-  "{{count}} pages left in chapter_other": "{{count}} pages left in chapter"
+  "{{count}} pages left in chapter_other": "{{count}} pages left in chapter",
+  "Disable Brightness Control": "Disable Brightness Control"
 }

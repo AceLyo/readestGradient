@@ -63,6 +63,7 @@ export const DEFAULT_SYSTEM_SETTINGS: Partial<SystemSettings> = {
   screenWakeLock: false,
   screenBrightness: -1, // -1~100, -1 for system default
   autoScreenBrightness: true,
+  disableBrightnessControl: true, // If true, app won't control device brightness on Android
   openLastBooks: false,
   lastOpenBooks: [],
   autoImportBooksOnOpen: false,
@@ -142,7 +143,7 @@ export const DEFAULT_BOOK_LAYOUT: BookLayout = {
   maxColumnCount: 1,
   maxInlineSize: getDefaultMaxInlineSize(),
   maxBlockSize: getDefaultMaxBlockSize(),
-  animated: false,
+  animated: true,
   isEink: false,
   writingMode: 'auto',
   vertical: false,

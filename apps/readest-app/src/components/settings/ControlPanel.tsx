@@ -36,6 +36,9 @@ const ControlPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRes
   const [animated, setAnimated] = useState(viewSettings.animated);
   const [isEink, setIsEink] = useState(viewSettings.isEink);
   const [autoScreenBrightness, setAutoScreenBrightness] = useState(settings.autoScreenBrightness);
+  const [disableBrightnessControl, setDisableBrightnessControl] = useState(
+    settings.disableBrightnessControl,
+  );
   const [allowScript, setAllowScript] = useState(viewSettings.allowScript);
 
   const resetToDefaults = useResetViewSettings();
@@ -140,6 +143,12 @@ const ControlPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRes
     saveSysSettings(envConfig, 'autoScreenBrightness', autoScreenBrightness);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoScreenBrightness]);
+
+  useEffect(() => {
+    if (disableBrightnessControl === settings.disableBrightnessControl) return;
+    saveSysSettings(envConfig, 'disableBrightnessControl', disableBrightnessControl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disableBrightnessControl]);
 
   useEffect(() => {
     if (viewSettings.allowScript === allowScript) return;
@@ -280,6 +289,17 @@ const ControlPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRes
                     className='toggle'
                     checked={isEink}
                     onChange={() => setIsEink(!isEink)}
+                  />
+                </div>
+              )}
+              {appService?.isAndroidApp && (
+                <div className='config-item'>
+                  <span className=''>{_('Disable Brightness Control')}</span>
+                  <input
+                    type='checkbox'
+                    className='toggle'
+                    checked={disableBrightnessControl}
+                    onChange={() => setDisableBrightnessControl(!disableBrightnessControl)}
                   />
                 </div>
               )}

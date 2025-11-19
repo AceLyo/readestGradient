@@ -51,9 +51,11 @@ export const ColorPanel: React.FC<ColorPanelProps> = ({ actionTab, bottomOffset 
       debounce(async (value: number) => {
         saveSysSettings(envConfig, 'screenBrightness', value);
         saveSysSettings(envConfig, 'autoScreenBrightness', false);
-        await setScreenBrightness(value / 100);
+        if (!settings.disableBrightnessControl) {
+          await setScreenBrightness(value / 100);
+        }
       }, 100),
-    [envConfig, setScreenBrightness],
+    [envConfig, setScreenBrightness, settings.disableBrightnessControl],
   );
 
   const handleScreenBrightnessChange = useCallback(
@@ -80,7 +82,7 @@ export const ColorPanel: React.FC<ColorPanelProps> = ({ actionTab, bottomOffset 
 
   return (
     <div className={classes} style={{ bottom: bottomOffset }}>
-      {appService?.hasScreenBrightness && (
+      {appService?.hasScreenBrightness && !settings.disableBrightnessControl && (
         <Slider
           label={_('Screen Brightness')}
           initialValue={screenBrightnessValue}

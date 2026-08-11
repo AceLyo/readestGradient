@@ -64,7 +64,7 @@ export const DEFAULT_SYSTEM_SETTINGS: Partial<SystemSettings> = {
   screenBrightness: -1, // -1~100, -1 for system default
   autoScreenBrightness: true,
   disableBrightnessControl: true, // If true, app won't control device brightness on Android
-  openLastBooks: false,
+  openLastBooks: true,
   lastOpenBooks: [],
   autoImportBooksOnOpen: false,
   telemetryEnabled: false,

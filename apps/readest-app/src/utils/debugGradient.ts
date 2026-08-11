@@ -35,7 +35,7 @@ export function inspectGradientStyles(doc: Document): GradientDebugInfo[] {
   textElements.forEach((el) => {
     const htmlEl = el as HTMLElement;
     const computed = window.getComputedStyle(htmlEl);
-    const hasText = Boolean(htmlEl.textContent?.trim());
+    const hasText = htmlEl.textContent?.trim().length > 0 || false;
     
     // Only include elements that have text or are likely to contain text
     if (hasText || ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'dd', 'dt', 'blockquote'].includes(htmlEl.tagName.toLowerCase())) {
